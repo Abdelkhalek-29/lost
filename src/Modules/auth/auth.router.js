@@ -28,6 +28,11 @@ router.patch(
   isValid(validator.forgetCodeSchema),
   authController.sendForgetCode
 );
+router.put(
+  "/sendForgetCode",
+  isValid(validator.forgetCodeSchema),
+  authController.sendForgetCode
+);
 
 // Reset Password
 router.patch(
@@ -36,6 +41,11 @@ router.patch(
   authController.resetPassword
 );
 
+router.put(
+  "/resetpassword",
+  isValid(validator.resetPasswordSchema),
+  authController.resetPassword
+);
 
 
 export default router;
