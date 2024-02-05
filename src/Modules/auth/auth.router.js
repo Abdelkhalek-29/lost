@@ -23,16 +23,16 @@ router.post("/login", isValid(validator.loginSchema), authController.login);
 //router.post("/admin",isAuthorized("admin"),isValid(validator.loginSchema),authController.loginAdmin)
 
 // Forget code
-router.patch(
+router.post(
   "/sendForgetCode",
   isValid(validator.forgetCodeSchema),
   authController.sendForgetCode
 );
-router.put(
+/*router.put(
   "/sendForgetCode",
   isValid(validator.forgetCodeSchema),
   authController.sendForgetCode
-);
+);*/
 
 // Reset Password
 router.patch(
