@@ -2,13 +2,7 @@ import mongoose, { Schema, model } from "mongoose";
 
 const userSchema = new Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-      min: 3,
-      max: 20,
-    },
-    lastName: {
+   name: {
       type: String,
       required: true,
       min: 3,
@@ -36,12 +30,10 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      require: true,
       enum: ["male", "female"],
     },
     phone: {
       type: String,
-      require: true,
     },
     status: {
       type: String,
@@ -54,7 +46,6 @@ const userSchema = new Schema(
     },
     Location: {
       type: String,
-      required: true,
       enum: [
         "New Valley",
         "Matruh",

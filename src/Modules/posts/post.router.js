@@ -3,7 +3,7 @@ import { isAuthenticated } from "../../Middleware/authentication.middleware.js";
 import { isAuthorized } from "../../Middleware/authorizaion.middleware.js";
 import { isValid } from "../../Middleware/validation.middleware.js";
 import {
-  lostPostSchema,
+//  lostPostSchema,
   postIdSchema,
   updatePostSchema,
   searchQuerySchema,
@@ -31,7 +31,7 @@ router.post(
   isAuthenticated,
   isAuthorized("user"),
   fileUpload(filterObject.image).fields([{ name: "postImages", maxCount: 8 }]),
-  isValid(lostPostSchema),
+  //isValid(lostPostSchema),
   addPost
 );
 

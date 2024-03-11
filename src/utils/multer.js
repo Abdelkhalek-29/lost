@@ -1,8 +1,8 @@
 import multer, { diskStorage } from "multer";
 
 export const filterObject = {
-  image: ['image/png', 'image/jpg', 'image/jpeg'],
-  pdf: ['application/pdf'],
+  image: ["image/png", "image/jpg", "image/jpeg"],
+  pdf: ["application/pdf"],
 };
 
 export const fileUpload = (filterArray) => {

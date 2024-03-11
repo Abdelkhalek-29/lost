@@ -7,10 +7,9 @@ import jwt from "jsonwebtoken";
 import { sendEmail } from "../../utils/sendEmails.js";
 import { tokenModel } from "../../../DB/models/token.model.js";
 
-
 // SignUp
 export const signup = asyncHandler(async (req, res, next) => {
-  const { firstName,lastName,nId, email, password,Location, gender, phone } = req.body;
+  const { name, nId, email, password } = req.body;
 
   const isUser = await userModel.findOne({ email });
   if (isUser)
@@ -24,15 +23,11 @@ export const signup = asyncHandler(async (req, res, next) => {
   const activationCode = crypto.randomBytes(64).toString("hex");
 
   const user = await userModel.create({
-    firstName,
-    lastName,
+    name,
     nId,
     email,
     password: hashPassword,
     activationCode,
-    Location,
-    gender,
-    phone,
   });
 
   const link = `${req.protocol}://${req.headers.host}/auth/confirmEmail/${activationCode}`;
@@ -99,7 +94,6 @@ export const login = asyncHandler(async (req, res, next) => {
   return res.json({ success: true, results: token });
 });
 
-
 // Login Admin
 export const loginAdmin = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
@@ -115,7 +109,7 @@ export const loginAdmin = asyncHandler(async (req, res, next) => {
   if (!match) return next(new Error("Invalid Password", { cause: 400 }));
 
   const token = jwt.sign(
-    { id: user._id, email: user.email , role: user.role },
+    { id: user._id, email: user.email, role: user.role },
     process.env.TOKEN_KEY,
     {
       expiresIn: "3d",
@@ -132,7 +126,6 @@ export const loginAdmin = asyncHandler(async (req, res, next) => {
   await user.save();
   return res.json({ success: true, results: token });
 });
-
 
 // Send forget code
 export const sendForgetCode = asyncHandler(async (req, res, next) => {
@@ -181,6 +174,8 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
     await token.save();
   });
 
-  return res.json({ success: true, message: "Password Changed ! Try to login " });
+  return res.json({
+    success: true,
+    message: "Password Changed ! Try to login ",
+  });
 });
-

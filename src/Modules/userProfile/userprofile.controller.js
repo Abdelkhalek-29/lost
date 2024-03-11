@@ -13,7 +13,7 @@ export const updateProfile = asyncHandler(async (req, res, next) => {
       lastName: req.body.lastName,
       nId: req.body.nId,
       email: req.body.email,
-      Location:req.body.Location,
+      Location: req.body.Location,
       gender: req.body.gender,
       phone: req.body.phone,
     },
@@ -84,6 +84,3 @@ export const changePassword = asyncHandler(async (req, res, next) => {
 
   return res.json({ success: true, result: user });
 });
-
-
-

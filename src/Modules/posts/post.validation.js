@@ -2,7 +2,7 @@ import Joi from "joi";
 import { isValidObjectId } from "../../Middleware/validation.middleware.js";
 
 // Add Post
-export const lostPostSchema = Joi.object({
+/*export const lostPostSchema = Joi.object({
   firstName: Joi.string().min(3).max(20).required(),
   lastName: Joi.string().min(3).max(20).required(),
   gender: Joi.string().required(),
@@ -36,7 +36,7 @@ export const lostPostSchema = Joi.object({
   //featureVector: Joi.array().items(Joi.number()).required(),
 
   // featureVector:Joi.string()
-}).required();
+}).required();*/
 
 // Post
 export const postIdSchema = Joi.object({
