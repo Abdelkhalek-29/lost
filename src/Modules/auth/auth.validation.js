@@ -34,7 +34,7 @@ export const forgetCodeSchema =Joi.object({
 export const resetPasswordSchema = Joi.object({
     email:Joi.string().email().required(),
     forgetCode: Joi.string().required(),
-    password:Joi.string().required(),
+    password:Joi.string().regex(passwordRegex).required(),
     confirmPassword:Joi.string().valid(Joi.ref("password")).required(),
 }).required()
 
