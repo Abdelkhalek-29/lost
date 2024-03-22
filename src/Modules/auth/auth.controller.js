@@ -143,7 +143,7 @@ export const sendForgetCode = asyncHandler(async (req, res, next) => {
   const html = `
     <h1>${code}</h1>`;
 
-  const isSend = sendEmail({
+  const isSend =await sendEmail({
     to: user.email,
     subject: "Reset Password",
     html,
