@@ -3,23 +3,23 @@ import postRouter from "./Modules/posts/post.router.js";
 import adminRouter from "./Modules/admin/admin.router.js";
 import userprofileRouter from "./Modules/userProfile/userprofile.router.js";
 import { globalErrorHandling } from "./utils/errorHandling.js";
-import cors from "cors"
+import cors from "cors";
 
 export const appRouter = (app, express) => {
   // CORS
-  const whitelist = ["http://localhost:3000"]
+  const whitelist = ["http://localhost:3000"];
   const corsOptions = {
     origin: function (origin, callback) {
       if (!origin || whitelist.indexOf(origin) !== -1) {
-        callback(null, true)
+        callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"))
+        callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
-    exposedHeaders: ['Access-Control-Allow-Private-Network']
-  }
-  app.use(cors(corsOptions))
+    exposedHeaders: ["Access-Control-Allow-Private-Network"],
+  };
+  app.use(cors(corsOptions));
   app.use(express.json());
 
   // Auth

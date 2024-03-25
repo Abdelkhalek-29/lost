@@ -84,3 +84,8 @@ export const changePassword = asyncHandler(async (req, res, next) => {
 
   return res.json({ success: true, result: user });
 });
+
+// User posts
+/*export const viewPosts=asyncHandler(async(req,res,next=>{
+  
+}))*/

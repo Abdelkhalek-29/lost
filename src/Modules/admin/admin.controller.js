@@ -7,7 +7,6 @@ import crypto from "crypto";
 import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
 
-
 // Delete post
 export const deletePost = asyncHandler(async (req, res, next) => {
   const post = await postModel.findById(req.params.postId);
@@ -90,7 +89,7 @@ export const allReport = asyncHandler(async (req, res, next) => {
 
 // Single reports
 export const singleReport = asyncHandler(async (req, res, next) => {
-  const {reportId}=req.params
+  const { reportId } = req.params;
   const report = await reportModel.findById(reportId);
   if (!report) return next(new Error("Report not found !"));
 
