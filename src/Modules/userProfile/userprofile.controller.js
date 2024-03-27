@@ -3,19 +3,20 @@ import { asyncHandler } from "../../utils/errorHandling.js";
 import bcryptjs from "bcryptjs";
 import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
+import { postModel } from "../../../DB/models/post.model.js";
 
 // Update Profile
 export const updateProfile = asyncHandler(async (req, res, next) => {
   const user = await userModel.findOneAndUpdate(
     { _id: req.user._id },
     {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      name: req.body.name,
       nId: req.body.nId,
       email: req.body.email,
       Location: req.body.Location,
       gender: req.body.gender,
       phone: req.body.phone,
+      userName: req.body.userName,
     },
     { new: true }
   );
@@ -86,6 +87,15 @@ export const changePassword = asyncHandler(async (req, res, next) => {
 });
 
 // User posts
-/*export const viewPosts=asyncHandler(async(req,res,next=>{
-  
-}))*/
+export const viewPosts = asyncHandler(async (req, res, next) => {
+  const user = await userModel.findById(req.user._id);
+  if (!user) return next(new Error("user not found !"));
+
+  const post = await postModel.find({ createdBy: user._id });
+  if (!post) return next(new Error("Posts not found !"));
+
+  return res.json({ success: true, post });
+});
+
+// View profile
+export const viewProfile = asyncHandler(async (req, res, next) => {});

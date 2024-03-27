@@ -7,18 +7,14 @@ import { findMatchingImages, findMatchingPosts } from "../../utils/match.js";
 import { imageModel } from "../../../DB/models/image.mode.js";
 
 export const addPost = asyncHandler(async (req, res, next) => {
-  console.log(1);
   //file
   if (!req.files)
     return next(new Error("Person images are required !", { cause: 400 }));
-  console.log(2);
 
   //create unique folder name
   const cloudFolder = nanoid();
   let i = 0;
   let images = [];
-  let featureVector = [];
-  console.log(3);
 
   // upload Post images
   for (const file of req.files.postImages) {
@@ -26,26 +22,17 @@ export const addPost = asyncHandler(async (req, res, next) => {
       file.path,
       { folder: `${process.env.FOLDER_CLOUD_NAME}/posts/${cloudFolder}` }
     );
-
-    featureVector = req.body.postImages[i].featureVector[0];
-    i = i + 1;
-
     images.push({
       id: public_id,
       url: secure_url,
-      featureVector: featureVector,
     });
   }
-  console.log(4);
-
   // create post
   let post = await postModel.create({
     ...req.body,
     cloudFolder,
-    createdBy: req.user.id,
+    createdBy: req.user._id,
   });
-  console.log(4);
-
   const image = await imageModel.create({ images, postId: post._id });
 
   // add imagePost in postModel
@@ -54,16 +41,11 @@ export const addPost = asyncHandler(async (req, res, next) => {
     { imageId: image._id },
     { new: true }
   );
-  const matchingPosts = await findMatchingPosts(post);
-  const matchingImages = await findMatchingImages(post);
-  console.log(5);
-
   return res.status(201).json({
     results: post,
     success: true,
     message: "Post published successfully !",
     image,
-    matching: matchingImages,
   });
 });
 

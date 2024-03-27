@@ -8,6 +8,11 @@ const userSchema = new Schema(
       min: 3,
       max: 20,
     },
+    userName: {
+      type: String,
+      min: 4,
+      max: 15,
+    },
     nId:{
       type:Number,
       required:true

@@ -2,12 +2,12 @@ import Joi from "joi";
 import { isValidObjectId } from "../../Middleware/validation.middleware.js";
 
 // Add Post
-/*export const lostPostSchema = Joi.object({
+export const lostPostSchema = Joi.object({
   firstName: Joi.string().min(3).max(20).required(),
   lastName: Joi.string().min(3).max(20).required(),
   gender: Joi.string().required(),
   age: Joi.number().required(),
-  recentLocation: Joi.string().required(),
+  address: Joi.string().required(),
   type: Joi.string().required(),
   hair_type: Joi.string()
     .valid("straight", "wavy", "curly", "coily")
@@ -18,25 +18,11 @@ import { isValidObjectId } from "../../Middleware/validation.middleware.js";
   skin_color: Joi.string()
     .required()
     .valid("very fair", "fair", "medium", "olive", "brown", "black"),
-  height_relative_to_his_peers: Joi.string()
-    .required()
-    .valid("above", "identical", "below"),
   eye_color: Joi.string()
     .required()
     .valid("black", "brown", "blue", "hazel", "amber", "green", "gray"),
   notes: Joi.string(),
- // postImages: Joi.string().required(),
-  postImages: Joi.array().items(
-    Joi.object({
-      // id: Joi.string().custom(isValidObjectId).required(),
-      // url: Joi.string().required(),
-      featureVector: Joi.array().required(),
-    })
-  ),
-  //featureVector: Joi.array().items(Joi.number()).required(),
-
-  // featureVector:Joi.string()
-}).required();*/
+}).required();
 
 // Post
 export const postIdSchema = Joi.object({
@@ -58,12 +44,11 @@ export const updatePostSchema = Joi.object({
   lastName: Joi.string().min(3).max(20),
   gender: Joi.string(),
   age: Joi.number(),
-  recentLocation: Joi.string(),
+  address: Joi.string(),
   type: Joi.string(),
   hair_type: Joi.string(),
   hair_color: Joi.string(),
   skin_color: Joi.string(),
-  height_relative_to_his_peers: Joi.string(),
   eye_color: Joi.string(),
   notes: Joi.string(),
 }).required();
@@ -91,11 +76,6 @@ export const searchQuerySchema = Joi.object({
     "olive",
     "brown",
     "black"
-  ),
-  height_relative_to_his_peers: Joi.string().valid(
-    "above",
-    "identical",
-    "below"
   ),
   eye_color: Joi.string().valid(
     "black",

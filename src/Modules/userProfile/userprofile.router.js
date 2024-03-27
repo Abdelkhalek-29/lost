@@ -44,7 +44,14 @@ router.patch(
   authController.changePassword
 );
 
+// View posts
+router.get(
+  "/posts",
+  isAuthenticated,
+  isAuthorized("user"),
+  authController.viewPosts
+);
 
-
-
+// View Profile
+router.get("/profile",isAuthenticated,isAuthorized,authController.viewProfile)
 export default router;
