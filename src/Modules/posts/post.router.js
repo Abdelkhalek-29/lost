@@ -27,7 +27,7 @@ const router = Router();
 
 // Add Post
 router.post(
-  "/newPost",
+  "/newpost",
   isAuthenticated,
   isAuthorized("user"),
   fileUpload(filterObject.image).fields([{ name: "postImages", maxCount: 8 }]),

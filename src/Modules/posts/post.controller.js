@@ -10,7 +10,6 @@ export const addPost = asyncHandler(async (req, res, next) => {
   //file
   if (!req.files)
     return next(new Error("Person images are required !", { cause: 400 }));
-
   //create unique folder name
   const cloudFolder = nanoid();
   let i = 0;
