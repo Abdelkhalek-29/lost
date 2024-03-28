@@ -114,6 +114,6 @@ router.post(
   addImage
 )
 // Get all Posts
-router.get("/allreports",isAuthenticated,isAuthorized("user"), allreports);
+router.get("/allreports", allreports);
 
 export default router;
