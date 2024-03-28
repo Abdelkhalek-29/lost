@@ -14,6 +14,7 @@ import {
   addImage,
   addPost,
   allPosts,
+  allreports,
   closeCase,
   deletePost,
   searchedPost,
@@ -112,5 +113,7 @@ router.post(
   //isValid(newImageSchema),
   addImage
 )
+// Get all Posts
+router.get("/allreports",isAuthenticated,isAuthorized("user"), allreports);
 
 export default router;

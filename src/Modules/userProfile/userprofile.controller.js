@@ -97,5 +97,5 @@ export const viewPosts = asyncHandler(async (req, res, next) => {
   return res.json({ success: true, post });
 });
 
-// View profile
+// View profile                // TO DO
 export const viewProfile = asyncHandler(async (req, res, next) => {});

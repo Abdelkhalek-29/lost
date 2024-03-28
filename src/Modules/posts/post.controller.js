@@ -369,3 +369,16 @@ export const addImage = asyncHandler(async (req, res, next) => {
   res.status(201).json({ success: true, results: imagePost });
 });
 */
+
+// get all reports
+export const allreports = asyncHandler(async (req, res, next) => {
+  const reports = await reportModel.find();
+
+  // Map the reports array to extract specific properties from each report
+  const mappedReports = reports.map((report) => ({
+    reason: report.reason,
+    description: report.description,
+  }));
+
+  return res.json({ success: true, reports: mappedReports });
+});
