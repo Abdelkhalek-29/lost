@@ -3,7 +3,6 @@ import { nanoid } from "nanoid";
 import { postModel } from "./../../../DB/models/post.model.js";
 import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
-import { findMatchingImages, findMatchingPosts } from "../../utils/match.js";
 import { imageModel } from "../../../DB/models/image.mode.js";
 
 export const addPost = asyncHandler(async (req, res, next) => {
@@ -14,7 +13,6 @@ export const addPost = asyncHandler(async (req, res, next) => {
   const cloudFolder = nanoid();
   let i = 0;
   let images = [];
-
   // upload Post images
   for (const file of req.files.postImages) {
     const { secure_url, public_id } = await cloudinary.uploader.upload(
@@ -381,4 +379,21 @@ export const allreports = asyncHandler(async (req, res, next) => {
   }));
 
   return res.json({ success: true, reports: mappedReports });
+});
+
+// Add data
+export const data = asyncHandler(async (req, res, next) => {
+  
+  
+  // create post
+  let post = await postModel.create({
+    ...req.body,
+    createdBy: req.user._id,
+  });
+
+  return res.status(201).json({
+    results: post,
+    success: true,
+    message: "Post published successfully !",
+  });
 });

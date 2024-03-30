@@ -62,7 +62,7 @@ export const postSchema = new Schema(
     },
     imageId:{type:Types.ObjectId , ref:"Image",default:null },
     createdBy: { type: Types.ObjectId, ref: "User", required: true },
-    cloudFolder: { type: String, unique: true, required: true },
+    cloudFolder: { type: String, unique: true},
 },
 
   { timestamps: true }

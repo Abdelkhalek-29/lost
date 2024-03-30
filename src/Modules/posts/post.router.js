@@ -16,6 +16,7 @@ import {
   allPosts,
   allreports,
   closeCase,
+  data,
   deletePost,
   searchedPost,
   sendReport,
@@ -35,7 +36,15 @@ router.post(
   //isValid(lostPostSchema),
   addPost
 );
-
+// Add data
+router.post(
+  "/data",
+  isAuthenticated,
+  isAuthorized("user"),
+  fileUpload(filterObject.image).fields([{ name: "postImages", maxCount: 8 }]),
+  //isValid(lostPostSchema),
+  data
+);
 // Get all Posts
 router.get("/allposts",isAuthenticated,isAuthorized("user"), allPosts);
 
