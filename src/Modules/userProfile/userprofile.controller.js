@@ -86,16 +86,24 @@ export const changePassword = asyncHandler(async (req, res, next) => {
   return res.json({ success: true, result: user });
 });
 
-// User posts
-export const viewPosts = asyncHandler(async (req, res, next) => {
+
+// View profile
+export const viewProfile = asyncHandler(async (req, res, next) => {
+
   const user = await userModel.findById(req.user._id);
-  if (!user) return next(new Error("user not found !"));
+  return res.json({ success: true, user });
 
-  const post = await postModel.find({ createdBy: user._id });
-  if (!post) return next(new Error("Posts not found !"));
 
-  return res.json({ success: true, post });
 });
 
-// View profile                // TO DO
-export const viewProfile = asyncHandler(async (req, res, next) => {});
+// view posts for each user
+
+export const viewposts=asyncHandler(async(req,res,next)=>{
+  const user = await userModel.findById(req.user._id);
+  if (!user) return next(new Error("user not found !"));
+  const posts= await postModel.find({createdBy:user._id})
+  if (!posts) return next(new Error("Posts not found !"));
+  return res.json({success: true , posts})
+
+
+})

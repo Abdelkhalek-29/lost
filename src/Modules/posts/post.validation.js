@@ -28,14 +28,6 @@ export const lostPostSchema = Joi.object({
 export const postIdSchema = Joi.object({
   postId: Joi.string().custom(isValidObjectId).required(),
 }).required();
-/*export const newImageSchema = Joi.object({
-  postId: Joi.string().custom(isValidObjectId).required(),
-  imageId: Joi.string().custom(isValidObjectId).required(),
-  postImages: Joi.array().items(
-    Joi.object({
-      featureVector: Joi.array().required(),
-    }))
-}).required();*/
 
 // Update data Post
 export const updatePostSchema = Joi.object({

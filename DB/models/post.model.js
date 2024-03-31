@@ -47,10 +47,10 @@ export const postSchema = new Schema(
       required: true,
       enum: ["very fair", "fair", "medium", "olive", "brown", "black"],
     },
-    eye_color:{
-      type:String,
-      required:true,
-      enum:["black","brown","blue","hazel","amber","green","gray"],
+    eye_color: {
+      type: String,
+      required: true,
+      enum: ["black", "brown", "blue", "hazel", "amber", "green", "gray"],
     },
     notes: {
       type: String,
@@ -60,10 +60,10 @@ export const postSchema = new Schema(
       enum: ["false", "true"],
       default: "false",
     },
-    imageId:{type:Types.ObjectId , ref:"Image",default:null },
+    imageId: { type: Types.ObjectId, ref: "Image", default: null },
     createdBy: { type: Types.ObjectId, ref: "User", required: true },
-    cloudFolder: { type: String, unique: true},
-},
+    cloudFolder: { type: String, unique: true, required: true },
+  },
 
   { timestamps: true }
 );

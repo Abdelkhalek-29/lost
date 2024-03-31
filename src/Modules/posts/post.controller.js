@@ -380,20 +380,3 @@ export const allreports = asyncHandler(async (req, res, next) => {
 
   return res.json({ success: true, reports: mappedReports });
 });
-
-// Add data
-export const data = asyncHandler(async (req, res, next) => {
-  
-  
-  // create post
-  let post = await postModel.create({
-    ...req.body,
-    createdBy: req.user._id,
-  });
-
-  return res.status(201).json({
-    results: post,
-    success: true,
-    message: "Post published successfully !",
-  });
-});

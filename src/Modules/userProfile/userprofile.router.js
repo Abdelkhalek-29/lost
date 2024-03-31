@@ -49,7 +49,7 @@ router.get(
   "/posts",
   isAuthenticated,
   isAuthorized("user"),
-  authController.viewPosts
+  authController.viewposts
 );
 
 // View Profile
