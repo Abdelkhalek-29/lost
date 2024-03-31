@@ -53,5 +53,5 @@ router.get(
 );
 
 // View Profile
-router.get("/profile",isAuthenticated,isAuthorized,authController.viewProfile)
+router.get("/profile",isAuthenticated,isAuthorized("user"),authController.viewProfile)
 export default router;
