@@ -3,7 +3,7 @@ import { isAuthenticated } from "../../Middleware/authentication.middleware.js";
 import { isAuthorized } from "../../Middleware/authorizaion.middleware.js";
 import { isValid } from "../../Middleware/validation.middleware.js";
 import {
-//  lostPostSchema,
+  //  lostPostSchema,
   postIdSchema,
   updatePostSchema,
   searchQuerySchema,
@@ -38,7 +38,7 @@ router.post(
 );
 
 // Get all Posts
-router.get("/allposts",isAuthenticated,isAuthorized("user"), allPosts);
+router.get("/allposts", isAuthenticated, isAuthorized("user"), allPosts);
 
 // Get single Post
 router.get(
@@ -77,7 +77,6 @@ router.patch(
   updatePostData
 );
 
-
 // Search
 router.get(
   "/search",
@@ -113,7 +112,7 @@ router.post(
   fileUpload(filterObject.image).fields([{ name: "postImages", maxCount: 8 }]),
   //isValid(newImageSchema),
   addImage
-)
+);
 // Get all Posts
 router.get("/allreports", allreports);
 

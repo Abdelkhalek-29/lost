@@ -49,7 +49,13 @@ export const addPost = asyncHandler(async (req, res, next) => {
 // get all Posts
 export const allPosts = asyncHandler(async (req, res, next) => {
   const allPosts = await postModel.find();
-  return res.json({ success: true, results: allPosts });
+  const postsWithImages = await Promise.all(
+    allPosts.map(async (post) => {
+      const image = await imageModel.findById(post.imageId);
+      return { ...post.toObject(), image };
+    })
+  );
+  return res.json({ success: true, results: postsWithImages });
 });
 
 // Get single post
