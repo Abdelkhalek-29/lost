@@ -4,6 +4,7 @@ import { postModel } from "./../../../DB/models/post.model.js";
 import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
 import { imageModel } from "../../../DB/models/image.mode.js";
+import { userModel } from "../../../DB/models/user.model.js";
 
 export const addPost = asyncHandler(async (req, res, next) => {
   //file
@@ -52,11 +53,13 @@ export const allPosts = asyncHandler(async (req, res, next) => {
   const postsWithImages = await Promise.all(
     allPosts.map(async (post) => {
       const image = await imageModel.findById(post.imageId);
-      return { ...post.toObject(), image };
+      const user = await userModel.findById(post.createdBy).select('name profileImage');
+      return { ...post.toObject(), image, user };
     })
   );
   return res.json({ success: true, results: postsWithImages });
 });
+
 
 // Get single post
 export const singlePost = asyncHandler(async (req, res, next) => {
