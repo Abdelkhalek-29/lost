@@ -9,7 +9,7 @@ import { fileUpload, filterObject } from "../../utils/multer.js";
 const router = Router();
 
 // Update Profile
-router.patch(
+router.put(
   "/update",
   isAuthenticated,
   isAuthorized("user"),
@@ -18,7 +18,7 @@ router.patch(
 );
 
 // update Profile Image
-router.patch(
+router.put(
   "/updateProfileImage",
   isAuthenticated,
   isAuthorized("user"),
@@ -27,7 +27,7 @@ router.patch(
 );
 
 // update Cover Profile
-router.patch(
+router.put(
   "/updateCoverProfile",
   isAuthenticated,
   isAuthorized("user"),
@@ -36,7 +36,7 @@ router.patch(
 );
 
 // change Password
-router.patch(
+router.put(
   "/changePassword",
   isAuthenticated,
   isAuthorized("user"),
@@ -53,5 +53,10 @@ router.get(
 );
 
 // View Profile
-router.get("/profile",isAuthenticated,isAuthorized("user"),authController.viewProfile)
+router.get(
+  "/profile",
+  isAuthenticated,
+  isAuthorized("user"),
+  authController.viewProfile
+);
 export default router;
