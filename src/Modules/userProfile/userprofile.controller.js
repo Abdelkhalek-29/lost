@@ -122,3 +122,8 @@ export const ViewUserProfile = asyncHandler(async (req, res, next) => {
 
   return res.json({ success: true, userProfile, postsWithImages });
 });
+
+export const options = asyncHandler(async (req, res, next) => {
+  const user =await userModel.findById(req.user._id).select("name userName profileImage coverImage -_id")
+  return res.json({success:true , user})
+});

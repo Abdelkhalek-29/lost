@@ -67,4 +67,13 @@ router.get(
   isAuthorized("user"),
   profileController.ViewUserProfile
 );
+
+// options
+//
+router.get(
+  "/options",
+  isAuthenticated,
+  isAuthorized("user"),
+  profileController.options
+);
 export default router;
