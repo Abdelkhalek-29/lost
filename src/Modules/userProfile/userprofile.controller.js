@@ -4,6 +4,7 @@ import bcryptjs from "bcryptjs";
 import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
 import { postModel } from "../../../DB/models/post.model.js";
+import { imageModel } from "../../../DB/models/image.mode.js";
 
 // Update Profile
 export const updateProfile = asyncHandler(async (req, res, next) => {
@@ -86,24 +87,38 @@ export const changePassword = asyncHandler(async (req, res, next) => {
   return res.json({ success: true, result: user });
 });
 
-
 // View profile
 export const viewProfile = asyncHandler(async (req, res, next) => {
-
   const user = await userModel.findById(req.user._id);
   return res.json({ success: true, user });
-
-
 });
 
 // view posts for each user
-
-export const viewposts=asyncHandler(async(req,res,next)=>{
+export const viewposts = asyncHandler(async (req, res, next) => {
   const user = await userModel.findById(req.user._id);
   if (!user) return next(new Error("user not found !"));
-  const posts= await postModel.find({createdBy:user._id})
+  const posts = await postModel.find({ createdBy: user._id });
   if (!posts) return next(new Error("Posts not found !"));
-  return res.json({success: true , posts})
+  return res.json({ success: true, posts });
+});
 
+// View others Profile
+export const ViewUserProfile = asyncHandler(async (req, res, next) => {
+  const userId = req.params.userId;
 
-})
+  // Find user by ID
+  const userProfile = await userModel.findById(userId);
+  if (!userProfile) {
+    return next(new Error("User not found"));
+  }
+  const userPosts = await postModel.find({ createdBy: userId });
+
+  const postsWithImages = await Promise.all(
+    userPosts.map(async (post) => {
+      const image = await imageModel.findById(post.imageId);
+      return { ...post.toObject(), image };
+    })
+  );
+
+  return res.json({ success: true, userProfile, postsWithImages });
+});

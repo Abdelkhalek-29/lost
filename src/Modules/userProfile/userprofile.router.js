@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as authController from "./userprofile.controller.js";
+import * as profileController from "./userprofile.controller.js";
 import * as validator from "./userprofile.validation.js";
 import { isValid } from "../../Middleware/validation.middleware.js";
 import { isAuthenticated } from "../../Middleware/authentication.middleware.js";
@@ -14,7 +14,7 @@ router.put(
   isAuthenticated,
   isAuthorized("user"),
   isValid(validator.updateSchema),
-  authController.updateProfile
+  profileController.updateProfile
 );
 
 // update Profile Image
@@ -23,7 +23,7 @@ router.put(
   isAuthenticated,
   isAuthorized("user"),
   fileUpload(filterObject.image).single("imageProfile"),
-  authController.updateProfileImage
+  profileController.updateProfileImage
 );
 
 // update Cover Profile
@@ -32,7 +32,7 @@ router.put(
   isAuthenticated,
   isAuthorized("user"),
   fileUpload(filterObject.image).single("coverProfile"),
-  authController.updateCoverProfile
+  profileController.updateCoverProfile
 );
 
 // change Password
@@ -41,7 +41,7 @@ router.put(
   isAuthenticated,
   isAuthorized("user"),
   isValid(validator.changePasswordSchema),
-  authController.changePassword
+  profileController.changePassword
 );
 
 // View posts
@@ -49,7 +49,7 @@ router.get(
   "/posts",
   isAuthenticated,
   isAuthorized("user"),
-  authController.viewposts
+  profileController.viewposts
 );
 
 // View Profile
@@ -57,6 +57,14 @@ router.get(
   "/profile",
   isAuthenticated,
   isAuthorized("user"),
-  authController.viewProfile
+  profileController.viewProfile
+);
+
+//
+router.get(
+  "/viewuserprofile/:userId",
+  isAuthenticated,
+  isAuthorized("user"),
+  profileController.ViewUserProfile
 );
 export default router;
