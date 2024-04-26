@@ -4,6 +4,7 @@ import adminRouter from "./Modules/admin/admin.router.js";
 import userprofileRouter from "./Modules/userProfile/userprofile.router.js";
 import { globalErrorHandling } from "./utils/errorHandling.js";
 import cors from "cors";
+//import cookieParser from "cookie-parser";
 
 export const appRouter = (app, express) => {
   // CORS
@@ -20,6 +21,7 @@ export const appRouter = (app, express) => {
     exposedHeaders: ["Access-Control-Allow-Private-Network"],
   };
   app.use(cors(corsOptions));
+  //app.use(cookieParser())
   app.use(express.json());
 
   // Auth

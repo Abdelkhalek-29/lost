@@ -1,6 +1,6 @@
 import mongoose, { Types, model, Schema } from "mongoose";
 
-// Image 
+// Image
 export const imageSchema = new Schema({
   images: [
     {

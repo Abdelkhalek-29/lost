@@ -18,6 +18,7 @@ import {
   allreports,
   closeCase,
   deletePost,
+  predict,
   searchedPost,
   sendReport,
   singlePost,
@@ -116,4 +117,6 @@ router.post(
 // Get all Posts
 router.get("/allreports", allreports);
 
+// test predict
+router.post("/predict",fileUpload(filterObject.image).fields([{ name: "postImages", maxCount: 8 }]),predict)
 export default router;

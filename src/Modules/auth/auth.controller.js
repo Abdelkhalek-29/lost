@@ -91,6 +91,9 @@ export const login = asyncHandler(async (req, res, next) => {
 
   user.status = "online";
   await user.save();
+
+  /*res.cookie("accesstoken", `Bearer ${token}`),
+    { httponly: true, maxAge: 1000 * 60 * 60 * 48 };*/
   return res.json({ success: true, results: token });
 });
 
@@ -143,7 +146,7 @@ export const sendForgetCode = asyncHandler(async (req, res, next) => {
   const html = `
     <h1>${code}</h1>`;
 
-  const isSend =await sendEmail({
+  const isSend = await sendEmail({
     to: user.email,
     subject: "Reset Password",
     html,

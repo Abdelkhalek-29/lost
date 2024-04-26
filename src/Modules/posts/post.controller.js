@@ -5,6 +5,8 @@ import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
 import { imageModel } from "../../../DB/models/image.mode.js";
 import { userModel } from "../../../DB/models/user.model.js";
+import { predictfeature } from "../../utils/predictVector.js";
+import { model } from "mongoose";
 
 export const addPost = asyncHandler(async (req, res, next) => {
   //file
@@ -53,13 +55,14 @@ export const allPosts = asyncHandler(async (req, res, next) => {
   const postsWithImages = await Promise.all(
     allPosts.map(async (post) => {
       const image = await imageModel.findById(post.imageId);
-      const user = await userModel.findById(post.createdBy).select('name profileImage');
+      const user = await userModel
+        .findById(post.createdBy)
+        .select("name profileImage");
       return { ...post.toObject(), image, user };
     })
   );
   return res.json({ success: true, results: postsWithImages });
 });
-
 
 // Get single post
 export const singlePost = asyncHandler(async (req, res, next) => {
@@ -71,7 +74,7 @@ export const singlePost = asyncHandler(async (req, res, next) => {
 export const deletePost = asyncHandler(async (req, res, next) => {
   const post = await postModel.findById(req.params.postId);
   if (!post) return next(new Error("Post not found !"));
-
+  console.log("Hello");
   // check owner
   if (req.user._id.toString() != post.createdBy.toString())
     return next(new Error("Not authorized !", { cause: 401 }));
@@ -182,14 +185,13 @@ export const searchedPost = asyncHandler(async (req, res, next) => {
     lastName,
     gender,
     age,
-    recentLocation,
+    address,
     type,
     hair_type,
     hair_color,
     skin_color,
-    height_relative_to_his_peers,
+    eye_color,
   } = req.query;
-
   // Construct the dynamic query based on provided parameters
   const searchQuery = {};
 
@@ -209,8 +211,8 @@ export const searchedPost = asyncHandler(async (req, res, next) => {
     searchQuery.age = parseInt(age, 10); // Assuming age is a number
   }
 
-  if (recentLocation) {
-    searchQuery.recentLocation = { $regex: new RegExp(recentLocation, "i") };
+  if (address) {
+    searchQuery.address = { $regex: new RegExp(address, "i") };
   }
 
   if (type) {
@@ -223,15 +225,16 @@ export const searchedPost = asyncHandler(async (req, res, next) => {
     searchQuery.hair_color = hair_color;
   }
   if (skin_color) {
-    searchQuery.skin_color = hair_color;
+    searchQuery.skin_color = skin_color;
   }
-  if (height_relative_to_his_peers) {
-    searchQuery.height_relative_to_his_peers = height_relative_to_his_peers;
+  if (eye_color) {
+    searchQuery.eye_color = eye_color;
   }
-
-  // Execute the query
-  const posts = await postModel.find(searchQuery);
-
+  console.log("Search Query:", searchQuery); 
+  const posts = await postModel.find(searchQuery).populate([
+    { path: "imageId", model: "Image", select: "-images.featureVector" },
+    { path: "createdBy", model: "User", select: "name profileImage" },
+  ]);
   return res.json({ success: true, results: posts });
 });
 
@@ -378,7 +381,7 @@ export const addImage = asyncHandler(async (req, res, next) => {
 */
 
 // get all reports
-export const allreports = asyncHandler(async (req, res, next) => {
+export const allreports = asyncHandler(async (req, res) => {
   const reports = await reportModel.find();
 
   // Map the reports array to extract specific properties from each report
@@ -388,4 +391,14 @@ export const allreports = asyncHandler(async (req, res, next) => {
   }));
 
   return res.json({ success: true, reports: mappedReports });
+});
+
+export const predict = asyncHandler(async (req, res, next) => {
+  const files = req.files?.postImages;
+  if (!files) {
+    return res.status(400).json({ message: "No files uploaded" });
+  }
+  const predictionResult = await predictfeature(files);
+  // const featureVector=imageModel.create
+  return res.json({ results: predictionResult, success: true });
 });
