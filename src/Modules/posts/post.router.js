@@ -21,6 +21,7 @@ import {
   predict,
   searchedPost,
   sendReport,
+  similarity,
   singlePost,
   updatePostData,
   updatePostImages,
@@ -37,6 +38,9 @@ router.post(
   isValid(lostPostSchema),
   addPost
 );
+
+// calc simalitry
+router.get("/calc",isAuthenticated,isAuthorized("user"),similarity)
 
 // Get all Posts
 router.get("/allposts", isAuthenticated, isAuthorized("user"), allPosts);

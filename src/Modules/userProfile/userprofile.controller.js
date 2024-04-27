@@ -124,6 +124,6 @@ export const ViewUserProfile = asyncHandler(async (req, res, next) => {
 });
 
 export const options = asyncHandler(async (req, res, next) => {
-  const user =await userModel.findById(req.user._id).select("name userName profileImage coverImage -_id")
+  const user =await userModel.findById(req.user._id).select("name userName profileImage coverImage status -_id")
   return res.json({success:true , user})
 });

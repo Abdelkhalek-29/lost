@@ -6,17 +6,19 @@ import { reportModel } from "../../../DB/models/report.model.js";
 import { imageModel } from "../../../DB/models/image.mode.js";
 import { userModel } from "../../../DB/models/user.model.js";
 import { predictfeature } from "../../utils/predictVector.js";
-import { model } from "mongoose";
+import { callCosineSimilarityEndpoint } from "../../utils/cosine_similarity.js";
 
+// addPost
 export const addPost = asyncHandler(async (req, res, next) => {
-  //file
+  // Check if files exist
   if (!req.files)
     return next(new Error("Person images are required !", { cause: 400 }));
-  //create unique folder name
+
+  // Create unique folder name
   const cloudFolder = nanoid();
-  let i = 0;
   let images = [];
-  // upload Post images
+
+  // Upload Post images
   for (const file of req.files.postImages) {
     const { secure_url, public_id } = await cloudinary.uploader.upload(
       file.path,
@@ -27,26 +29,54 @@ export const addPost = asyncHandler(async (req, res, next) => {
       url: secure_url,
     });
   }
-  // create post
+
+  // Create post
   let post = await postModel.create({
     ...req.body,
     cloudFolder,
     createdBy: req.user._id,
   });
+
+  // Predict feature vectors
+  const predictionResult = await predictfeature(req.files.postImages);
+
+  // Add feature vectors to each image
+  for (let i = 0; i < images.length; i++) {
+    images[i].featureVector = predictionResult.feature_vectors[i];
+  }
+
+  // Create image document
   const image = await imageModel.create({ images, postId: post._id });
 
-  // add imagePost in postModel
+  // Add imagePost in postModel
   post = await postModel.findByIdAndUpdate(
     post._id,
     { imageId: image._id },
     { new: true }
   );
+
   return res.status(201).json({
     results: post,
     success: true,
     message: "Post published successfully !",
     image,
   });
+});
+
+// similarity
+export const similarity = asyncHandler(async (req, res, next) => {
+  const images = await imageModel.find({}).select('images.featureVector[0]') // Query to fetch all images (adjust as needed)
+
+
+  console.log(images)
+
+  // Call the function to calculate similarity
+  const { similarity_score, result } = await callCosineSimilarityEndpoint(vector1, vector2);
+
+  // Debugging: Log similarity score
+  console.log('Similarity Score:', similarity_score);
+  res.status(200).json({ results: similarity_score, result });
+
 });
 
 // get all Posts
@@ -230,7 +260,7 @@ export const searchedPost = asyncHandler(async (req, res, next) => {
   if (eye_color) {
     searchQuery.eye_color = eye_color;
   }
-  console.log("Search Query:", searchQuery); 
+  console.log("Search Query:", searchQuery);
   const posts = await postModel.find(searchQuery).populate([
     { path: "imageId", model: "Image", select: "-images.featureVector" },
     { path: "createdBy", model: "User", select: "name profileImage" },
