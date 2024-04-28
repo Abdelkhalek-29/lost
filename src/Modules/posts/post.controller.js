@@ -38,13 +38,13 @@ export const addPost = asyncHandler(async (req, res, next) => {
   });
 
   // Predict feature vectors
-  const predictionResult = await predictfeature(req.files.postImages);
+  /*const predictionResult = await predictfeature(req.files.postImages);
 
   // Add feature vectors to each image
   for (let i = 0; i < images.length; i++) {
     images[i].featureVector = predictionResult.feature_vectors[i];
   }
-
+*/
   // Create image document
   const image = await imageModel.create({ images, postId: post._id });
 
