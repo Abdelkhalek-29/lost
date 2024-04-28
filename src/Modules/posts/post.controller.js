@@ -87,7 +87,7 @@ export const allPosts = asyncHandler(async (req, res, next) => {
       const image = await imageModel.findById(post.imageId);
       const user = await userModel
         .findById(post.createdBy)
-        .select("name profileImage");
+        .select("name profileImage status");
       return { ...post.toObject(), image, user };
     })
   );

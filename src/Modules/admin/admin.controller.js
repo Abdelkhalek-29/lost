@@ -32,9 +32,8 @@ export const deletePost = asyncHandler(async (req, res, next) => {
 
 // ADD Police Account
 export const addPolice = asyncHandler(async (req, res, next) => {
-  const { email, password, location } = req.body;
-
-  const isUser = await policeModel.findOne({ email });
+  const { email, password } = req.body;
+  const isUser = await userModel.findOne({ email });
   if (isUser)
     return next(new Error("Email already registerd !", { cause: 409 }));
 
@@ -42,19 +41,16 @@ export const addPolice = asyncHandler(async (req, res, next) => {
     password,
     Number(process.env.SALT_ROUND)
   );
-
-  const user = await policeModel.create({
+  const user = await userModel.create({
     email,
     password: hashPassword,
-    location,
+    locationPolice: "Police Station",
+    role: "police",
+    isConfirmed:true
   });
-
-  return res.json({
-    success: true,
-    message: "Police user saved successfully ",
-    results: user,
-  });
+  return res.json({ success: true, results: user });
 });
+
 
 // ADD Dar Account
 export const addDar = asyncHandler(async (req, res, next) => {
