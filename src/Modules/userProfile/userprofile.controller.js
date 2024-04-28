@@ -44,7 +44,7 @@ export const updateProfileImage = asyncHandler(async (req, res, next) => {
   }
 
   await user.save();
-  return res.json({ success: true, result: user });
+  return res.json({ success: true});
 });
 
 // update cover image
@@ -56,16 +56,16 @@ export const updateCoverProfile = asyncHandler(async (req, res, next) => {
     const { public_id, secure_url } = await cloudinary.uploader.upload(
       req.file.path,
       {
-        public_id: user.coverImages.id,
+        public_id: user.coverImage.id,
       }
     );
 
-    user.coverImages.url = secure_url;
-    user.coverImages.id = public_id;
+    user.coverImage.url = secure_url;
+    user.coverImage.id = public_id;
   }
 
   await user.save();
-  return res.json({ success: true, result: user });
+  return res.json({ success: true });
 });
 
 // Change Password
