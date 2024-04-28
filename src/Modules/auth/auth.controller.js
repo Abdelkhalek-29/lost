@@ -94,7 +94,7 @@ export const login = asyncHandler(async (req, res, next) => {
 
   /*res.cookie("accesstoken", `Bearer ${token}`),
     { httponly: true, maxAge: 1000 * 60 * 60 * 48 };*/
-  return res.json({ success: true, results: token });
+  return res.json({ success: true, results: token, userRole:user.role});
 });
 
 // Login Admin

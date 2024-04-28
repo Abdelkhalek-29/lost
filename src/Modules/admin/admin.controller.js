@@ -1,11 +1,10 @@
-import { darModel } from "../../../DB/models/dar.model.js";
-import { policeModel } from "../../../DB/models/police.model.js";
 import { postModel } from "../../../DB/models/post.model.js";
 import { asyncHandler } from "../../utils/errorHandling.js";
 import bcryptjs from "bcryptjs";
 import crypto from "crypto";
 import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
+import { userModel } from "../../../DB/models/user.model.js";
 
 // Delete post
 export const deletePost = asyncHandler(async (req, res, next) => {
@@ -42,6 +41,7 @@ export const addPolice = asyncHandler(async (req, res, next) => {
     Number(process.env.SALT_ROUND)
   );
   const user = await userModel.create({
+    name:"police Station",
     email,
     password: hashPassword,
     locationPolice: "Police Station",

@@ -15,7 +15,6 @@ const userSchema = new Schema(
     },
     nId:{
       type:Number,
-      required:true
     },
     email: {
       type: String,
