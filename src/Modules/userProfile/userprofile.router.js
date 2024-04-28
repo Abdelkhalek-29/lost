@@ -60,7 +60,7 @@ router.get(
   profileController.viewProfile
 );
 
-//
+// others profile
 router.get(
   "/viewuserprofile/:userId",
   isAuthenticated,

@@ -96,10 +96,28 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
 // view posts for each user
 export const viewposts = asyncHandler(async (req, res, next) => {
   const user = await userModel.findById(req.user._id);
-  if (!user) return next(new Error("user not found !"));
+  if (!user) return next(new Error("User not found!"));
+
   const posts = await postModel.find({ createdBy: user._id });
-  if (!posts) return next(new Error("Posts not found !"));
-  return res.json({ success: true, posts });
+  if (!posts) return next(new Error("Posts not found!"));
+
+  // Populate images and user for each post
+  const populatedPosts = await Promise.all(
+    posts.map(async (post) => {
+      const populatedPost = { ...post.toObject() };
+
+      // Populate images for the post
+      if (populatedPost.imageId) {
+        const image = await imageModel
+          .findById(populatedPost.imageId)
+          .select("images.url");
+        populatedPost.image = image;
+      }
+      return populatedPost;
+    })
+  );
+
+  return res.json({ success: true, posts: populatedPosts });
 });
 
 // View others Profile
@@ -124,6 +142,8 @@ export const ViewUserProfile = asyncHandler(async (req, res, next) => {
 });
 
 export const options = asyncHandler(async (req, res, next) => {
-  const user =await userModel.findById(req.user._id).select("name userName profileImage coverImage status -_id")
-  return res.json({success:true , user})
+  const user = await userModel
+    .findById(req.user._id)
+    .select("name userName profileImage coverImage status -_id");
+  return res.json({ success: true, user });
 });

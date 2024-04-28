@@ -56,25 +56,27 @@ export const addPolice = asyncHandler(async (req, res, next) => {
 export const addDar = asyncHandler(async (req, res, next) => {
   const { email, password, name } = req.body;
 
-  const isUser = await darModel.findOne({ email });
+  const isUser = await userModel.findOne({ email });
   if (isUser)
     return next(new Error("Email already reqistered !"), { cause: 409 });
+
+  const checkName = await userModel.findOne({ name });
+  if (checkName)
+    return next(new Error("name already reqistered !"), { cause: 409 });
 
   const hashPassword = bcryptjs.hashSync(
     password,
     Number(process.env.SALT_ROUND)
   );
 
-  const user = await darModel.create({
+  const user = await userModel.create({
     email,
     password: hashPassword,
     name,
+    role: "dar",
+    isConfirmed: true,
   });
-  return res.json({
-    success: true,
-    message: "Dar user saved successfully ",
-    results: user,
-  });
+  return res.json({ success: true, results: user });
 });
 
 // All reports
