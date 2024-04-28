@@ -113,10 +113,15 @@ export const viewposts = asyncHandler(async (req, res, next) => {
           .select("images.url");
         populatedPost.image = image;
       }
+      // Populate user for the post
+      const user = await userModel
+        .findById(populatedPost.createdBy)
+        .select("name profileImage.url status");
+      populatedPost.user = user;
+
       return populatedPost;
     })
   );
-
   return res.json({ success: true, posts: populatedPosts });
 });
 
