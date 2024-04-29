@@ -44,7 +44,7 @@ export const updateProfileImage = asyncHandler(async (req, res, next) => {
   }
 
   await user.save();
-  return res.json({ success: true});
+  return res.json({ success: true });
 });
 
 // update cover image
@@ -126,7 +126,24 @@ export const viewposts = asyncHandler(async (req, res, next) => {
 });
 
 // View others Profile
-export const ViewUserProfile = asyncHandler(async (req, res, next) => {
+export const ViewOthersProfile = asyncHandler(async (req, res, next) => {
+  const userId = req.params.userId;
+
+  // Find user by ID
+  const userProfile = await userModel
+    .findById(userId)
+    .select(
+      "-password -role -isConfirmed -activationCode -profileImage.id -coverImage.id"
+    );
+  if (!userProfile) {
+    return next(new Error("User not found"));
+  }
+
+  return res.json({ success: true, userProfile });
+});
+
+// View others posts
+export const ViewOthersPosts = asyncHandler(async (req, res, next) => {
   const userId = req.params.userId;
 
   // Find user by ID
@@ -134,7 +151,9 @@ export const ViewUserProfile = asyncHandler(async (req, res, next) => {
   if (!userProfile) {
     return next(new Error("User not found"));
   }
-  const userPosts = await postModel.find({ createdBy: userId });
+  const userPosts = await postModel
+    .find({ createdBy: userId })
+   .select('-cloudFolder')
 
   const postsWithImages = await Promise.all(
     userPosts.map(async (post) => {
@@ -143,7 +162,7 @@ export const ViewUserProfile = asyncHandler(async (req, res, next) => {
     })
   );
 
-  return res.json({ success: true, userProfile, postsWithImages });
+  return res.json({ success: true, postsWithImages });
 });
 
 export const options = asyncHandler(async (req, res, next) => {

@@ -60,13 +60,22 @@ router.get(
   profileController.viewProfile
 );
 
-// others profile
+// View others profile
 router.get(
-  "/viewuserprofile/:userId",
+  "/viewothersprofile/:userId",
   isAuthenticated,
   isAuthorized("user"),
-  profileController.ViewUserProfile
+  profileController.ViewOthersProfile
 );
+
+// View others Posts
+router.get(
+  "/viewothersposts/:userId",
+  isAuthenticated,
+  isAuthorized("user"),
+  profileController.ViewOthersPosts
+);
+
 
 // options
 //
