@@ -153,12 +153,17 @@ export const ViewOthersPosts = asyncHandler(async (req, res, next) => {
   }
   const userPosts = await postModel
     .find({ createdBy: userId })
-   .select('-cloudFolder')
+    .populate(
+      "createdBy",
+      "-cloudFolder -password -isConfirmed -gender -nId -email -role -activationCode -Location -phone -profileImage.id -profileImage.featureVector -coverImage"
+    ); 
 
   const postsWithImages = await Promise.all(
     userPosts.map(async (post) => {
-      const image = await imageModel.findById(post.imageId);
-      return { ...post.toObject(), image };
+      const image = await imageModel
+        .findById(post.imageId)
+        .select("images.url");
+      return { ...post.toObject(), image }; 
     })
   );
 
