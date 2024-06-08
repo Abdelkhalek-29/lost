@@ -40,7 +40,13 @@ router.post(
 );
 
 // calc simalitry
-router.get("/calc",isAuthenticated,isAuthorized("user"),similarity)
+router.post(
+  "/calc",
+  isAuthenticated,
+  isAuthorized("user"),
+  fileUpload(filterObject.image).fields([{ name: "postImages", maxCount: 8 }]),
+  similarity
+);
 
 // Get all Posts
 router.get("/allposts", isAuthenticated, isAuthorized("user"), allPosts);
@@ -122,5 +128,9 @@ router.post(
 router.get("/allreports", allreports);
 
 // test predict
-router.post("/predict",fileUpload(filterObject.image).fields([{ name: "postImages", maxCount: 8 }]),predict)
+router.post(
+  "/predict",
+  fileUpload(filterObject.image).fields([{ name: "postImages", maxCount: 8 }]),
+  predict
+);
 export default router;
