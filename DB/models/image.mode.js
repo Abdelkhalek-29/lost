@@ -5,8 +5,7 @@ export const imageSchema = new Schema({
   images: [
     {
       id: { type: String, required: true },
-      url: { type: String, required: true },
-      featureVector: { type: Array, default: [] },
+      url: { type: String, required: true }
     },
   ],
   postId: { type: Types.ObjectId, ref: "Post", required: true },

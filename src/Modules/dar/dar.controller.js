@@ -5,7 +5,7 @@ import { imageModel } from "../../../DB/models/image.mode.js";
 import { userModel } from "../../../DB/models/user.model.js";
 
 // update Location
-export const updateLocation = asyncHandler(async (req, res, next) => {
+/*export const updateLocation = asyncHandler(async (req, res, next) => {
     const { postId } = req.params;
   
     const post = await postModel.findById(postId);
@@ -25,7 +25,7 @@ export const updateLocation = asyncHandler(async (req, res, next) => {
   
     return res.json({ success: true, results: { ...post.toObject(), image, user } });
   });
-  
+  */
 // all post in dar
 export const allPosrInDar = asyncHandler(async (req, res, next) => {
   const allPosts = await postModel.find({ address: req.user.name });
@@ -43,3 +43,17 @@ export const allPosrInDar = asyncHandler(async (req, res, next) => {
 
   return res.json({ success: true, results: postsWithImages });
 });
+
+
+export const darProfile=asyncHandler(async(req,res,next)=>{
+  const { address } = req.params;
+
+  const posts = await postModel.find({ address }).populate({
+    path: 'imageId',
+    select: 'images.url'
+  });
+  if(!posts) {return res.json("Profile not found")}
+
+  return res.json({success:true , results:posts})
+
+})
