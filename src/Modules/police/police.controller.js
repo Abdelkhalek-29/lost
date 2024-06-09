@@ -15,7 +15,7 @@ export const updateLocation = asyncHandler(async (req, res, next) => {
 ]);
     if (!post) return next(new Error("Post Not Exist"));
   
-    post.address = req.body.darName;
+    post.address = req.body.address;
     await post.save();
     return res.json({ success: true, results: post });
   });
