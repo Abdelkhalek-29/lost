@@ -15,6 +15,7 @@ export const addDarSchema = Joi.object({
   password: Joi.string().min(8).max(16).required(),
   confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
   name: Joi.string().required(),
+  Location: Joi.string().required(),
 }).required();
 
 // Single report
