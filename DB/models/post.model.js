@@ -60,10 +60,14 @@ export const postSchema = new Schema(
       enum: ["false", "true"],
       default: "false",
     },
+    cemeteryLocation: {
+      type: String,
+    },
+
     imageId: { type: Types.ObjectId, ref: "Image", default: null },
     createdBy: { type: Types.ObjectId, ref: "User", required: true },
     cloudFolder: { type: String, unique: true, required: true },
-   // inDar:{type:String,default:null,enum:["Dar Alamal" , "Dar ALHayat" , "Wydad","Nova Vita Rehabilitation Center" ,"Dar Lamset Hanan El Shrouk"]}
+    // inDar:{type:String,default:null,enum:["Dar Alamal" , "Dar ALHayat" , "Wydad","Nova Vita Rehabilitation Center" ,"Dar Lamset Hanan El Shrouk"]}
   },
 
   { timestamps: true }

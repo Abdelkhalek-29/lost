@@ -23,10 +23,25 @@ export const updateLocation = asyncHandler(async (req, res, next) => {
 });
 
 export const getAllDar = asyncHandler(async (req, res, next) => {
-  const users = await userModel.find({ role: "dar" }).select('name')
+  const users = await userModel.find({ role: "dar" }).select("name");
   if (!users) {
     return res.json({ message: "Dars not found !" });
   }
 
-  return res.json({ success: true, results:users});
+  return res.json({ success: true, results: users });
+});
+
+export const addDeathCase = asyncHandler(async (req, res, next) => {
+  const { postId } = req.params;
+  const { cemeteryLocation } = req.body;
+
+  const post = await postModel.findById(postId);
+
+  if (!post) {
+    return res.status(404).json({ error: "Post not found" });
+  }
+  post.cemeteryLocation = cemeteryLocation;
+  // Save the updated post
+  await post.save();
+  return res.json({ success: true, cemeteryLocation: post.cemeteryLocation });
 });

@@ -6,3 +6,8 @@ export const updateLocationSchema=joi.object({
     address:joi.string().required()
 
 }).required()
+
+export const deathcase = joi.object({
+    cemeteryLocation:joi.string().required(),
+    postId: joi.string().custom(isValidObjectId).required(),
+  }).required();

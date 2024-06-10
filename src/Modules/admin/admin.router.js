@@ -4,7 +4,11 @@ import { isAuthenticated } from "../../Middleware/authentication.middleware.js";
 import { isAuthorized } from "../../Middleware/authorizaion.middleware.js";
 import { isValid } from "../../Middleware/validation.middleware.js";
 import { postIdSchema } from "../posts/post.validation.js";
-import { addDarSchema, addpoliceSchema, singleReportSchema } from "./admin.validation.js";
+import {
+  addDarSchema,
+  addpoliceSchema,
+  singleReportSchema,
+} from "./admin.validation.js";
 import {
   addDar,
   addPolice,
@@ -58,5 +62,11 @@ router.post(
 router.get("/reports", isAuthenticated, isAuthorized("admin"), allReport);
 
 // GEt single report
-router.get("/reports/:reportId",isAuthenticated,isAuthorized("admin"),isValid(singleReportSchema),singleReport);
+router.get(
+  "/reports/:reportId",
+  isAuthenticated,
+  isAuthorized("admin"),
+  isValid(singleReportSchema),
+  singleReport
+);
 export default router;
