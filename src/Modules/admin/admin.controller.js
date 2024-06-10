@@ -54,7 +54,7 @@ export const addPolice = asyncHandler(async (req, res, next) => {
 
 // ADD Dar Account
 export const addDar = asyncHandler(async (req, res, next) => {
-  const { email, password, name } = req.body;
+  const { email, password, name ,Location} = req.body;
 
   const isUser = await userModel.findOne({ email });
   if (isUser)
@@ -75,6 +75,7 @@ export const addDar = asyncHandler(async (req, res, next) => {
     name,
     role: "dar",
     isConfirmed: true,
+    Location
   });
   return res.json({ success: true, results: user });
 });
