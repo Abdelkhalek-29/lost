@@ -10,7 +10,6 @@ import { allPosts } from "../posts/post.controller.js";
 const router=Router()
 
 
-//router.post("/changelocation/:postId",isAuthenticated,isAuthorized("dar") ,isValid(updateLocationSchema) ,updateLocation)
 router.get("/allpostindar" , isAuthenticated , isAuthorized("dar") , allPosrInDar)
 router.get("/allpost" , isAuthenticated , isAuthorized("dar") , allPosts)
 router.get("/profile/:address",isAuthenticated,isAuthorized('user','admin','police','dar'),darProfile)
