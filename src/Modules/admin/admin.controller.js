@@ -64,7 +64,7 @@ export const addPolice = asyncHandler(async (req, res, next) => {
 
 // ADD Dar Account
 export const addDar = asyncHandler(async (req, res, next) => {
-  const { email, password, name, Location } = req.body;
+  const { email, password, name, Location ,profileImage} = req.body;
 
   const isUser = await userModel.findOne({ email });
   if (isUser)

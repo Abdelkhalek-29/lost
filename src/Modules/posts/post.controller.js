@@ -96,7 +96,7 @@ export const allPosts = asyncHandler(async (req, res, next) => {
 
 // Get single post
 export const singlePost = asyncHandler(async (req, res, next) => {
-  const post = await postModel.findById(req.params.postId);
+  const post = await postModel.findById(req.params.postId).populate('imageId')
   return res.json({ success: true, results: post });
 });
 
