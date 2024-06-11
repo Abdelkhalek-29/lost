@@ -104,25 +104,30 @@ export const singlePost = asyncHandler(async (req, res, next) => {
 export const deletePost = asyncHandler(async (req, res, next) => {
   const post = await postModel.findById(req.params.postId);
   if (!post) return next(new Error("Post not found !"));
-  console.log("Hello");
   // check owner
   if (req.user._id.toString() != post.createdBy.toString())
     return next(new Error("Not authorized !", { cause: 401 }));
 
-  const imagesArr = post.images;
-  const ids = imagesArr.map((imageObj) => imageObj.id);
+  // Find the images related to the post
+  const images = await imageModel.findOne({ postId: post._id });
+  if (images && images.images.length > 0) {
+    const ids = images.images.map((imageObj) => imageObj.id);
 
-  // ids.push(post.postImages.id);////////////////////////////
+    // Delete images from Cloudinary
+    if (ids.length > 0) {
+      await cloudinary.api.delete_resources(ids);
+    }
 
-  //delete images
-  const result = await cloudinary.api.delete_resources(ids);
+    // Delete images from the DB
+    await imageModel.findByIdAndDelete(images._id);
+  }
 
-  // delete folder
+  // Delete the Cloudinary folder
   await cloudinary.api.delete_folder(
     `${process.env.FOLDER_CLOUD_NAME}/posts/${post.cloudFolder}`
   );
 
-  // Delete post from DB
+  // Delete the post from the DB
   await postModel.findByIdAndDelete(req.params.postId);
 
   //send response

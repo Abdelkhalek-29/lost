@@ -1,36 +1,44 @@
 import { postModel } from "../../../DB/models/post.model.js";
 import { asyncHandler } from "../../utils/errorHandling.js";
 import bcryptjs from "bcryptjs";
-import crypto from "crypto";
 import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
 import { userModel } from "../../../DB/models/user.model.js";
+import { imageModel } from "../../../DB/models/image.mode.js";
 
 export const deletePost = asyncHandler(async (req, res, next) => {
-  const post = await postModel.findById(req.params.postId);
-  if (!post) {
-    return next(new Error("Post not found!"));
-  }
-  // Ensure images is an array
-  const imagesArr = Array.isArray(post.images) ? post.images : [];
-  const ids = imagesArr.map((imageObj) => imageObj.id);
+    // Find the post by ID
+    const post = await postModel.findById(req.params.postId);
+    if (!post) {
+      return next(new Error("Post not found!"));
+    }
 
-  // delete images
-  if (ids.length > 0) {
-    await cloudinary.api.delete_resources(ids);
-  }
+    // Find the images related to the post
+    const images = await imageModel.findOne({ postId: post._id });
+    if (images && images.images.length > 0) {
+      const ids = images.images.map((imageObj) => imageObj.id);
 
-  // delete folder
-  await cloudinary.api.delete_folder(
-    `${process.env.FOLDER_CLOUD_NAME}/posts/${post.cloudFolder}`
-  );
+      // Delete images from Cloudinary
+      if (ids.length > 0) {
+        await cloudinary.api.delete_resources(ids);
+      }
 
-  // Delete post from DB
-  await postModel.findByIdAndDelete(req.params.postId);
+      // Delete images from the DB
+      await imageModel.findByIdAndDelete(images._id);
+    }
 
-  // send response
-  return res.json({ success: true, message: "Post deleted successfully" });
-});
+    // Delete the Cloudinary folder
+    await cloudinary.api.delete_folder(
+      `${process.env.FOLDER_CLOUD_NAME}/posts/${post.cloudFolder}`
+    );
+
+    // Delete the post from the DB
+    await postModel.findByIdAndDelete(req.params.postId);
+
+    // Send response
+    return res.json({ success: true, message: "Post deleted successfully" });
+  } );
+
 
 // ADD Police Account
 export const addPolice = asyncHandler(async (req, res, next) => {
