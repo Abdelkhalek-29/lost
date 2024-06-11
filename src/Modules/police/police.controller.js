@@ -45,3 +45,16 @@ export const addDeathCase = asyncHandler(async (req, res, next) => {
   await post.save();
   return res.json({ success: true, cemeteryLocation: post.cemeteryLocation });
 });
+
+export const addConnectedCase=asyncHandler(async(req,res,next)=>{
+  const{postId}=req.params;
+
+  const post=await postModel.findById(postId)
+  if(!post) {
+    return res.status(404).json({error:"post not found"})
+  }
+  post.isClosed=true;
+  await post.save()
+
+  return res.json({success:true,connected:post.isClosed})
+})

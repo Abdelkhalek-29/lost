@@ -11,3 +11,7 @@ export const deathcase = joi.object({
     cemeteryLocation:joi.string().required(),
     postId: joi.string().custom(isValidObjectId).required(),
   }).required();
+
+  export const connectedCase = joi.object({
+    postId: joi.string().custom(isValidObjectId).required(),
+  }).required();

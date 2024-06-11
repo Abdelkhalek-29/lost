@@ -6,16 +6,19 @@ import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
 import { userModel } from "../../../DB/models/user.model.js";
 
-// Delete post
 export const deletePost = asyncHandler(async (req, res, next) => {
   const post = await postModel.findById(req.params.postId);
-  if (!post) return next(new Error("Post not found !"));
-
-  const imagesArr = post.images;
+  if (!post) {
+    return next(new Error("Post not found!"));
+  }
+  // Ensure images is an array
+  const imagesArr = Array.isArray(post.images) ? post.images : [];
   const ids = imagesArr.map((imageObj) => imageObj.id);
 
-  //delete images
-  const result = await cloudinary.api.delete_resources(ids);
+  // delete images
+  if (ids.length > 0) {
+    await cloudinary.api.delete_resources(ids);
+  }
 
   // delete folder
   await cloudinary.api.delete_folder(
@@ -25,8 +28,8 @@ export const deletePost = asyncHandler(async (req, res, next) => {
   // Delete post from DB
   await postModel.findByIdAndDelete(req.params.postId);
 
-  //send response
-  return res.json({ success: true, message: "post deleted successfully" });
+  // send response
+  return res.json({ success: true, message: "Post deleted successfully" });
 });
 
 // ADD Police Account
@@ -41,20 +44,19 @@ export const addPolice = asyncHandler(async (req, res, next) => {
     Number(process.env.SALT_ROUND)
   );
   const user = await userModel.create({
-    name:"police Station",
+    name: "police Station",
     email,
     password: hashPassword,
     locationPolice: "Police Station",
     role: "police",
-    isConfirmed:true
+    isConfirmed: true,
   });
   return res.json({ success: true, results: user });
 });
 
-
 // ADD Dar Account
 export const addDar = asyncHandler(async (req, res, next) => {
-  const { email, password, name ,Location} = req.body;
+  const { email, password, name, Location } = req.body;
 
   const isUser = await userModel.findOne({ email });
   if (isUser)
@@ -75,7 +77,7 @@ export const addDar = asyncHandler(async (req, res, next) => {
     name,
     role: "dar",
     isConfirmed: true,
-    Location
+    Location,
   });
   return res.json({ success: true, results: user });
 });

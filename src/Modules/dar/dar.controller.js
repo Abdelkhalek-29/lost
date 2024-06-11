@@ -62,3 +62,14 @@ export const darProfile = asyncHandler(async (req, res, next) => {
 
   return res.json({ success: true, results: posts, user });
 });
+
+
+// profile Info 
+export const info=asyncHandler(async(req,res,next)=>{
+  const user = await userModel.findById(req.user._id).select('name email profileImage.url')
+
+  if(!user){return res.json({message:"user not found !"})}
+
+  return res.json({success:true , results:user})
+
+})

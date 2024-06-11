@@ -3,11 +3,12 @@ import { isAuthenticated } from "../../Middleware/authentication.middleware.js";
 import { isAuthorized } from "../../Middleware/authorizaion.middleware.js";
 import { allPosts } from "../posts/post.controller.js";
 import {
+  addConnectedCase,
   addDeathCase,
   getAllDar,
   updateLocation,
 } from "./police.controller.js";
-import { deathcase, updateLocationSchema } from "./police.validation.js";
+import { connectedCase, deathcase, updateLocationSchema } from "./police.validation.js";
 import { isValid } from "../../Middleware/validation.middleware.js";
 
 const router = Router();
@@ -31,5 +32,14 @@ router.post(
   isAuthorized("police"),
   isValid(deathcase),
   addDeathCase
+);
+
+// Add connected case
+router.post(
+  "/connected/:postId",
+  isAuthenticated,
+  isAuthorized("police"),
+  isValid(connectedCase),
+  addConnectedCase
 );
 export default router;
