@@ -16,7 +16,7 @@
       "index.js": {
         "maxDuration": 30
       },
-      "src/*.js": {
+      "src/*": {
         "maxDuration": 60
       }
     }
