@@ -1,7 +1,6 @@
 import axios from "axios";
 import FormData from "form-data";
-import fs from "fs";
-import path from "path";
+
 
 export async function callCosineSimilarityEndpoint(vector1, vector2) {
   // Make HTTP request to your endpoint
@@ -19,46 +18,21 @@ export async function callCosineSimilarityEndpoint(vector1, vector2) {
 
 
 // Helper function to download image from a URL and save it locally
-async function downloadImage(url, filepath) {
-    const response = await axios({
-        url,
-        responseType: 'stream',
-    });
-    return new Promise((resolve, reject) => {
-        const writer = fs.createWriteStream(filepath);
-        response.data.pipe(writer);
-        let error = null;
-        writer.on('error', err => {
-            error = err;
-            writer.close();
-            reject(err);
-        });
-        writer.on('close', () => {
-            if (!error) {
-                resolve(filepath);
-            }
-        });
-    });
+async function fetchImage(url) {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    return Buffer.from(response.data, 'binary');
 }
 
 export async function compare_faces(v1, v2) {
-    const tempDir = './temp_images'; // Directory to store temporary images
-    if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir);
-    }
-
-    const personImagePath = path.join(tempDir, 'person_image.jpg');
-    const verificationImagePath = path.join(tempDir, 'verification_image.jpg');
-
     try {
-        // Download images
-        await downloadImage(v1, personImagePath);
-        await downloadImage(v2, verificationImagePath);
+        // Fetch images
+        const personImageBuffer = await fetchImage(v1);
+        const verificationImageBuffer = await fetchImage(v2);
 
         // Prepare form data
         const formData = new FormData();
-        formData.append('person_image', fs.createReadStream(personImagePath));
-        formData.append('verification_image', fs.createReadStream(verificationImagePath));
+        formData.append('person_image', personImageBuffer, 'person_image.jpg');
+        formData.append('verification_image', verificationImageBuffer, 'verification_image.jpg');
 
         // Send POST request
         const response = await axios.post("https://matching-jrcnqdtrua-ww.a.run.app/compare_faces/", formData, {
@@ -71,13 +45,5 @@ export async function compare_faces(v1, v2) {
     } catch (error) {
         console.error(error);
         return { error: "Comparison failed" };
-    } finally {
-        // Clean up temporary files
-        if (fs.existsSync(personImagePath)) {
-            fs.unlinkSync(personImagePath);
-        }
-        if (fs.existsSync(verificationImagePath)) {
-            fs.unlinkSync(verificationImagePath);
-        }
     }
 }
