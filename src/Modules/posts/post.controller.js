@@ -13,7 +13,7 @@ export const addPost = asyncHandler(async (req, res, next) => {
   // Check if files exist
   if (!req.files)
     return next(new Error("Person images are required !", { cause: 400 }));
-
+console.log(req)
   // Create unique folder name
   const cloudFolder = nanoid();
   let images = [];
@@ -54,7 +54,6 @@ export const addPost = asyncHandler(async (req, res, next) => {
     { imageId: image._id },
     { new: true }
   );
-
   return res.status(201).json({
     results: post,
     success: true,
