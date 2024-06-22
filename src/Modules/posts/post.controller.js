@@ -81,17 +81,42 @@ export const similarity = asyncHandler(async (req, res, next) => {
 
 // get all Posts
 export const allPosts = asyncHandler(async (req, res, next) => {
-  const allPosts = await postModel.find();
-  const postsWithImages = await Promise.all(
-    allPosts.map(async (post) => {
-      const image = await imageModel.findById(post.imageId);
-      const user = await userModel
-        .findById(post.createdBy)
-        .select("name profileImage status");
-      return { ...post.toObject(), image, user };
-    })
-  );
-  return res.json({ success: true, results: postsWithImages });
+  try {
+    const postsWithImagesAndUsers = await postModel.aggregate([
+      {
+        $lookup: {
+          from: "images", // The name of the collection you store images in
+          localField: "imageId",
+          foreignField: "_id",
+          as: "image",
+        },
+      },
+      {
+        $lookup: {
+          from: "users", // The name of the collection you store users in
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$image", // Unwind the image array to object
+      },
+      {
+        $unwind: "$user", // Unwind the user array to object
+      },
+      {
+        $project: {
+          "user.password": 0, 
+          "user.email": 0,
+        },
+      },
+    ]);
+
+    return res.json({ success: true, results: postsWithImagesAndUsers });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 // Get single post
