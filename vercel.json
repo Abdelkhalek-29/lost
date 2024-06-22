@@ -14,10 +14,10 @@
     ],
     "functions": {
       "index.js": {
-        "maxDuration": 30
+        "maxDuration": 60 
       },
-      "src/*": {
-        "maxDuration": 60
+      "src/api/*.js": {
+        "maxDuration": 60 
       }
     }
   }

@@ -4,70 +4,58 @@ import { compare_faces } from "../../utils/cosine_similarity.js";
 import { asyncHandler } from "../../utils/errorHandling.js";
 
 export const matchImage = asyncHandler(async (req, res, next) => {
-
-
-    const lastPost = await postModel.find({ createdBy: req.user._id });
-    if (lastPost.length === 0) {
-        return res.status(404).json({ message: "No images found for the user" });
+    // Fetch the latest post created by the user
+    const userPosts = await postModel.find({ createdBy: req.user._id });
+    if (userPosts.length === 0) {
+        return res.status(404).json({ message: "No posts found for the user" });
     }
 
-    const last1 = lastPost.length - 1;
-    const latestPostDoc = lastPost[last1];
-    // console.log(latestPostDoc);
-    
-    const typePost=latestPostDoc.type === "Lost" ? "Found" : "Lost";
-    console.log(typePost);
+    const latestPostDoc = userPosts[userPosts.length - 1];
+    const typePost = latestPostDoc.type === "Lost" ? "Found" : "Lost";
 
-    const lastImages = await imageModel.find({ createdBy: req.user._id });
-
-    if (lastImages.length === 0) {
-        return res.status(404).json({ message: "No images found for the user" });
+    // Fetch all images related to the user's latest post
+    const latestImagesDoc = await imageModel.findOne({ postId: latestPostDoc._id });
+    if (!latestImagesDoc || !latestImagesDoc.images || latestImagesDoc.images.length === 0) {
+        return res.status(404).json({ message: "No images found for the user's latest post" });
     }
 
-    const last = lastImages.length - 1;
-    const latestImageDoc = lastImages[last];
+    const latestImages = latestImagesDoc.images.map(img => img.url);
 
-    if (!latestImageDoc || !latestImageDoc.images || latestImageDoc.images.length === 0) {
-        return res.status(404).json({ message: "No images found in the last entry" });
+    // Fetch all posts of the opposite type
+    const oppositePosts = await postModel.find({ type: typePost });
+    if (oppositePosts.length === 0) {
+        return res.status(404).json({ message: `No ${typePost.toLowerCase()} posts found` });
     }
 
-    const latestImage = latestImageDoc.images[0].url; // Assuming only one image to compare
+    // Extract IDs of opposite type posts
+    const oppositePostIds = oppositePosts.map(post => post._id);
 
+    // Fetch all images related to the opposite type posts
+    const allOppositeImages = await imageModel.find({ postId: { $in: oppositePostIds } });
 
-    const postss = await postModel.find({ type: typePost });
+    for (let i = 0; i < allOppositeImages.length; i++) {
+        if (!allOppositeImages[i].images || allOppositeImages[i].images.length === 0) continue;
 
-    const postIds = postss.map(post => post._id);
+        for (let img of allOppositeImages[i].images) {
+            for (let latestImg of latestImages) {
+                const resultMatch = await compare_faces(latestImg, img.url);
 
-    const allImages = await imageModel.find({ postId: { $in: postIds } });
-    console.log(allImages.length);
+                // Log the result to understand its format
+                console.log("Result Match:", resultMatch);
 
-    // for (let imageDoc of allImages) {
+                // Check if resultMatch is an object and extract the message if necessary
+                const matchMessage = typeof resultMatch === "object" ? resultMatch.result : resultMatch;
 
-    for (let i=0 ; i<allImages.length ; i++) {
-        if (!allImages[i].images || allImages[i].images.length === 0) continue;
+                if (typeof matchMessage === "string" && matchMessage.includes("Same person")) {
+                    // Fetch the posts related to the matching images and populate images
+                    const post1 = await postModel.findOne({ _id: latestImagesDoc.postId }).populate('imageId');
+                    const post2 = await postModel.findOne({ _id: allOppositeImages[i].postId }).populate('imageId');
 
-        for (let img of allImages[i].images) {
-            const resultMatch = await compare_faces(latestImage, img.url);
-
-            // Log the result to understand its format
-            console.log("Result Match:", resultMatch);
-
-            // Check if resultMatch is an object and extract the message if necessary
-            const matchMessage =
-                typeof resultMatch === "object" ? resultMatch.result : resultMatch;
-
-            if (
-                typeof matchMessage === "string" &&
-                matchMessage.includes("Same person")
-            ) {
-                // Fetch the posts related to the matching images and populate images
-                const post1 = await postModel.findOne({ _id: latestImageDoc.postId }).populate('imageId');
-                const post2 = await postModel.findOne({ _id: allImages[i].postId }).populate('imageId');
-
-                return res.json({
-                    message: "match",
-                    posts: [post1, post2]
-                });
+                    return res.json({
+                        message: "match",
+                        posts: [post1, post2]
+                    });
+                }
             }
         }
     }

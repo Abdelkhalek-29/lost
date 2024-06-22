@@ -13,7 +13,7 @@ export const addPost = asyncHandler(async (req, res, next) => {
   // Check if files exist
   if (!req.files)
     return next(new Error("Person images are required !", { cause: 400 }));
-console.log(req)
+  console.log(req);
   // Create unique folder name
   const cloudFolder = nanoid();
   let images = [];
@@ -64,18 +64,19 @@ console.log(req)
 
 // similarity
 export const similarity = asyncHandler(async (req, res, next) => {
-  const images = await imageModel.find({}).select('images.featureVector[0]') // Query to fetch all images (adjust as needed)
+  const images = await imageModel.find({}).select("images.featureVector[0]"); // Query to fetch all images (adjust as needed)
 
-
-  console.log(images)
+  console.log(images);
 
   // Call the function to calculate similarity
-  const { similarity_score, result } = await callCosineSimilarityEndpoint(vector1, vector2);
+  const { similarity_score, result } = await callCosineSimilarityEndpoint(
+    vector1,
+    vector2
+  );
 
   // Debugging: Log similarity score
-  console.log('Similarity Score:', similarity_score);
+  console.log("Similarity Score:", similarity_score);
   res.status(200).json({ results: similarity_score, result });
-
 });
 
 // get all Posts
@@ -95,7 +96,7 @@ export const allPosts = asyncHandler(async (req, res, next) => {
 
 // Get single post
 export const singlePost = asyncHandler(async (req, res, next) => {
-  const post = await postModel.findById(req.params.postId).populate('imageId')
+  const post = await postModel.findById(req.params.postId).populate("imageId");
   return res.json({ success: true, results: post });
 });
 
