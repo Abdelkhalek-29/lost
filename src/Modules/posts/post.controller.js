@@ -10,15 +10,12 @@ import { callCosineSimilarityEndpoint } from "../../utils/cosine_similarity.js";
 
 // addPost
 export const addPost = asyncHandler(async (req, res, next) => {
-  // Check if files exist
   if (!req.files)
     return next(new Error("Person images are required !", { cause: 400 }));
   console.log(req);
-  // Create unique folder name
   const cloudFolder = nanoid();
   let images = [];
 
-  // Upload Post images
   for (const file of req.files.postImages) {
     const { secure_url, public_id } = await cloudinary.uploader.upload(
       file.path,
@@ -30,25 +27,15 @@ export const addPost = asyncHandler(async (req, res, next) => {
     });
   }
 
-  // Create post
   let post = await postModel.create({
     ...req.body,
     cloudFolder,
     createdBy: req.user._id,
   });
 
-  // Predict feature vectors
-  /*const predictionResult = await predictfeature(req.files.postImages);
 
-  // Add feature vectors to each image
-  for (let i = 0; i < images.length; i++) {
-    images[i].featureVector = predictionResult.feature_vectors[i];
-  }
-*/
-  // Create image document
   const image = await imageModel.create({ images, postId: post._id });
 
-  // Add imagePost in postModel
   post = await postModel.findByIdAndUpdate(
     post._id,
     { imageId: image._id },
@@ -85,7 +72,7 @@ export const allPosts = asyncHandler(async (req, res, next) => {
     const postsWithImagesAndUsers = await postModel.aggregate([
       {
         $lookup: {
-          from: "images", // The name of the collection you store images in
+          from: "images", 
           localField: "imageId",
           foreignField: "_id",
           as: "image",
@@ -93,17 +80,17 @@ export const allPosts = asyncHandler(async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "users", // The name of the collection you store users in
+          from: "users", 
           localField: "createdBy",
           foreignField: "_id",
           as: "user",
         },
       },
       {
-        $unwind: "$image", // Unwind the image array to object
+        $unwind: "$image", 
       },
       {
-        $unwind: "$user", // Unwind the user array to object
+        $unwind: "$user", 
       },
       {
         $project: {

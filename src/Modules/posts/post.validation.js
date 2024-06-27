@@ -51,7 +51,7 @@ export const searchQuerySchema = Joi.object({
   lastName: Joi.string(),
   gender: Joi.string().valid("male", "female"),
   age: Joi.number().integer().min(0),
-  recentLocation: Joi.string(),
+  address: Joi.string(),
   type: Joi.string().valid("Lost", "Found"),
   hair_type: Joi.string().valid("straight", "wavy", "curly", "coily"),
   hair_color: Joi.string().valid(
