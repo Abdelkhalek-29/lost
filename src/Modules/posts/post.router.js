@@ -110,7 +110,6 @@ router.post(
 router.patch(
   "/close/:postId",
   isAuthenticated,
-  isAuthorized("user"),
   isValid(postIdSchema),
   closeCase
 );
