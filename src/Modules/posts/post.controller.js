@@ -12,7 +12,6 @@ import { callCosineSimilarityEndpoint } from "../../utils/cosine_similarity.js";
 export const addPost = asyncHandler(async (req, res, next) => {
   if (!req.files)
     return next(new Error("Person images are required !", { cause: 400 }));
-  console.log(req);
   const cloudFolder = nanoid();
   let images = [];
 
@@ -239,7 +238,6 @@ export const searchedPost = asyncHandler(async (req, res, next) => {
     skin_color,
     eye_color,
   } = req.query;
-  // Construct the dynamic query based on provided parameters
   const searchQuery = {};
 
   if (firstName) {
