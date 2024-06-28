@@ -44,7 +44,7 @@ export const updateProfileImage = asyncHandler(async (req, res, next) => {
   }
 
   await user.save();
-  return res.json({ success: true });
+  return res.json({ success: true , message:("Profile image updated successfuly")});
 });
 
 // update cover image
@@ -65,7 +65,7 @@ export const updateCoverProfile = asyncHandler(async (req, res, next) => {
   }
 
   await user.save();
-  return res.json({ success: true });
+  return res.json({ success: true ,message:("Cover image updated successfuly") });
 });
 
 // Change Password

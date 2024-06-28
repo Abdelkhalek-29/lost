@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from "mongoose";
 
 const userSchema = new Schema(
   {
-   name: {
+    name: {
       type: String,
       required: true,
       min: 3,
@@ -13,8 +13,8 @@ const userSchema = new Schema(
       min: 4,
       max: 15,
     },
-    nId:{
-      type:Number,
+    nId: {
+      type: Number,
     },
     email: {
       type: String,
@@ -27,10 +27,10 @@ const userSchema = new Schema(
       min: 8,
       max: 16,
     },
-    role:{
-      type:String,
-      enum:["user","admin","police","dar"],
-      default:"user",
+    role: {
+      type: String,
+      enum: ["user", "admin", "police", "dar"],
+      default: "user",
     },
     gender: {
       type: String,
@@ -58,25 +58,23 @@ const userSchema = new Schema(
       url: {
         type: String,
         default:
-          "https://res.cloudinary.com/daho0a8yn/image/upload/v1700548603/LostAndFoundDefaults/user/facebook-avatar-th3experte-com_blatj0_cru5fn.jpg",
+          "https://res.cloudinary.com/dtykqby6b/image/upload/v1719540480/defualt/t0yelif4jla7lovmev3s.jpg",
       },
       id: {
         type: String,
-        default:
-          "LostAndFoundDefaults/user/facebook-avatar-th3experte-com_blatj0_cru5fn",
+        default: "defualt/t0yelif4jla7lovmev3s",
       },
     },
-    
+
     coverImage: {
       url: {
         type: String,
         default:
-          "https://res.cloudinary.com/daho0a8yn/image/upload/v1700554004/LostAndFoundDefaults/user/facebook-avatar-th3experte-com_blatj0_cru5fn_s1mb8y.jpg",
+          "https://res.cloudinary.com/dtykqby6b/image/upload/v1719540808/defualt/xkvhsagzcfg57wchk7yk.jpg",
       },
       id: {
         type: String,
-        default:
-          "LostAndFoundDefaults/user/facebook-avatar-th3experte-com_blatj0_cru5fn_s1mb8y",
+        default: "defualt/xkvhsagzcfg57wchk7yk",
       },
     },
   },

@@ -1,10 +1,10 @@
 import { Router } from "express";
-//import {  updateLocationSchema } from "./dar.validation.js";
 import { allPosrInDar, darProfile, info } from "./dar.controller.js";
-//import { isValid } from "../../Middleware/validation.middleware.js";
 import { isAuthenticated } from "../../Middleware/authentication.middleware.js";
 import { isAuthorized } from "../../Middleware/authorizaion.middleware.js";
 import { allPosts } from "../posts/post.controller.js";
+import * as profileController from "../userProfile/userprofile.controller.js";
+import { fileUpload, filterObject } from "../../utils/multer.js";
 
 
 const router=Router()
@@ -16,4 +16,21 @@ router.get("/profile/:address",isAuthenticated,isAuthorized('user','admin','poli
 // profile info
 router.get("/profileinfo",isAuthenticated,isAuthorized("dar"),info)
 
+// update Profile Image
+router.put(
+    "/updateProfileImage",
+    isAuthenticated,
+    isAuthorized("dar"),
+    fileUpload(filterObject.image).single("imageProfile"),
+    profileController.updateProfileImage
+  );
+
+  // update Cover Profile
+router.put(
+    "/updateCoverProfile",
+    isAuthenticated,
+    isAuthorized("dar"),
+    fileUpload(filterObject.image).single("updateCoverProfile"),
+    profileController.updateCoverProfile
+  );
 export default router
