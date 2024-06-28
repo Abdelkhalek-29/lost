@@ -275,7 +275,6 @@ export const searchedPost = asyncHandler(async (req, res, next) => {
   if (eye_color) {
     searchQuery.eye_color = eye_color;
   }
-  console.log("Search Query:", searchQuery);
   const posts = await postModel.find(searchQuery).populate([
     { path: "imageId", model: "Image", select: "-images.featureVector" },
     { path: "createdBy", model: "User", select: "name profileImage" },
