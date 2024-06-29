@@ -88,13 +88,7 @@ router.patch(
   updatePostData
 );
 
-// Search
-router.get(
-  "/search",
-  isAuthenticated,
-  isValid(searchQuerySchema),
-  searchedPost
-);
+
 
 //send Report
 router.post(
