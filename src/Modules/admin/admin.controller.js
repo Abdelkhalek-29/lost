@@ -64,7 +64,7 @@ export const addPolice = asyncHandler(async (req, res, next) => {
 
 // ADD Dar Account
 export const addDar = asyncHandler(async (req, res, next) => {
-  const { email, password, name, Location ,profileImage} = req.body;
+  const { email, password, name, Location } = req.body;
 
   const isUser = await userModel.findOne({ email });
   if (isUser)
@@ -86,6 +86,14 @@ export const addDar = asyncHandler(async (req, res, next) => {
     role: "dar",
     isConfirmed: true,
     Location,
+    profileImage: {
+      url: "https://res.cloudinary.com/dtykqby6b/image/upload/v1719695616/defualt/istsqjzqyljpbwvgmuzh.png",
+      id: "defualt/istsqjzqyljpbwvgmuzh"
+    },
+    coverImage: {
+      url: "https://res.cloudinary.com/dtykqby6b/image/upload/v1719696181/defualt/xaccde5nn62grr2nvdq2.jpg",
+      id: "defualt/xaccde5nn62grr2nvdq2"
+    },
   });
   return res.json({ success: true, results: user });
 });
