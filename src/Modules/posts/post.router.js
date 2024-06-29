@@ -51,6 +51,15 @@ router.post(
 // Get all Posts
 router.get("/allposts", isAuthenticated, isAuthorized("user"), allPosts);
 
+
+// Search
+router.get(
+  "/search",
+  isAuthenticated,
+  isValid(searchQuerySchema),
+  searchedPost
+);
+
 // Get single Post
 router.get(
   "/allposts/:postId",
