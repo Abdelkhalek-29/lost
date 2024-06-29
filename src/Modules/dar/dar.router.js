@@ -15,7 +15,6 @@ router.get("/allpost" , isAuthenticated , isAuthorized("dar") , allPosts)
 router.get("/profile/:address",isAuthenticated,isAuthorized('user','admin','police','dar'),darProfile)
 
 
-// update Profile Image
 router.put(
     "/updateProfileImage",
     isAuthenticated,
