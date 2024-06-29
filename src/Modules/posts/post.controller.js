@@ -4,8 +4,6 @@ import { postModel } from "./../../../DB/models/post.model.js";
 import cloudinary from "../../utils/cloud.js";
 import { reportModel } from "../../../DB/models/report.model.js";
 import { imageModel } from "../../../DB/models/image.mode.js";
-import { userModel } from "../../../DB/models/user.model.js";
-import { predictfeature } from "../../utils/predictVector.js";
 import { callCosineSimilarityEndpoint } from "../../utils/cosine_similarity.js";
 
 // addPost
@@ -437,12 +435,3 @@ export const allreports = asyncHandler(async (req, res) => {
   return res.json({ success: true, reports: mappedReports });
 });
 
-export const predict = asyncHandler(async (req, res, next) => {
-  const files = req.files?.postImages;
-  if (!files) {
-    return res.status(400).json({ message: "No files uploaded" });
-  }
-  const predictionResult = await predictfeature(files);
-  // const featureVector=imageModel.create
-  return res.json({ results: predictionResult, success: true });
-});
