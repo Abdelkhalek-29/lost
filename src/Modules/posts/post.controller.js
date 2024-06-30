@@ -367,60 +367,6 @@ export const addImage = asyncHandler(async (req, res, next) => {
   res.status(201).json({ success: true, results: newImage });
 });
 
-/*
-export const addImage = asyncHandler(async (req, res, next) => {
-  const { postId } = req.params;
-
-  const checkPost = await postModel.findById(postId);
-
-  if (!checkPost) {
-    return next(new Error("Post Not Found"));
-  }
-
-  const images = [];
-
-  // Check if req.body.postImages is defined and is an array
-  const postImages = Array.isArray(req.body.postImages)
-    ? req.body.postImages
-    : [];
-
-  const featureVectors = postImages.map((image) => image.featureVector[0]);
-
-  for (const file of req.files.postImages) {
-    const { secure_url, public_id } = await cloudinary.uploader.upload(
-      file.path,
-      {
-        folder: `${process.env.FOLDER_CLOUD_NAME}/posts/${checkPost.cloudFolder}`,
-      }
-    );
-
-    images.push({
-      id: public_id,
-      url: secure_url,
-      featureVector: featureVectors.shift(), // Get the next feature vector
-    });
-  }
-
-  const imagePostId = checkPost.imageId;
-
-  if (!imagePostId) {
-    return next(new Error("ImagePost Not Found"));
-  }
-
-  const imagePost = await imageModel.findById(imagePostId);
-
-  if (!imagePost) {
-    return next(new Error("ImagePost Not Found in imageModel"));
-  }
-
-  // Add the new images to the existing imagePost
-  imagePost.images = [...imagePost.images, ...images];
-
-  await imagePost.save();
-
-  res.status(201).json({ success: true, results: imagePost });
-});
-*/
 
 // get all reports
 export const allreports = asyncHandler(async (req, res) => {

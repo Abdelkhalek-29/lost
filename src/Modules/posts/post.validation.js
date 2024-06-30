@@ -10,11 +10,11 @@ export const lostPostSchema = Joi.object({
   address: Joi.string().required(),
   type: Joi.string().required(),
   hair_type: Joi.string()
-    .valid("straight", "wavy", "curly", "coily")
+    .valid("straight", "wavy", "curly", "coily","buzz cut","short")
     .required(),
   hair_color: Joi.string()
     .required()
-    .valid("black", "brown", "blond", "white/gray", "red"),
+    .valid("black", "brown", "blond", "white/gray", "red","white"),
   skin_color: Joi.string()
     .required()
     .valid("very fair", "fair", "medium", "olive", "brown", "black"),
@@ -53,13 +53,14 @@ export const searchQuerySchema = Joi.object({
   age: Joi.number().integer().min(0),
   address: Joi.string(),
   type: Joi.string().valid("Lost", "Found"),
-  hair_type: Joi.string().valid("straight", "wavy", "curly", "coily"),
+  hair_type: Joi.string().valid("straight", "wavy", "curly", "coily","buzz cut","short"),
   hair_color: Joi.string().valid(
     "black",
     "brown",
     "blond",
     "white/gray",
-    "red"
+    "red",
+    "white"
   ),
   skin_color: Joi.string().valid(
     "very fair",

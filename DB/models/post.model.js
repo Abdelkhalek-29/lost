@@ -35,12 +35,12 @@ export const postSchema = new Schema(
     hair_type: {
       type: String,
       required: true,
-      enum: ["straight", "wavy", "curly", "coily"],
+      enum: ["straight", "wavy", "curly", "coily","buzz cut","short"],
     },
     hair_color: {
       type: String,
       required: true,
-      enum: ["black", "brown", "blond", "white/gray", "red"],
+      enum: ["black", "brown", "blond", "white/gray", "red","white"],
     },
     skin_color: {
       type: String,
