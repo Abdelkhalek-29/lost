@@ -76,7 +76,6 @@ router.get(
   profileController.ViewOthersPosts
 );
 
-
 // options
 //
 router.get(
@@ -85,4 +84,10 @@ router.get(
   isAuthorized("user"),
   profileController.options
 );
+// Get all users
+router.get(
+  "/allusers",
+  isAuthenticated,
+  isAuthorized("user"),
+  profileController.allUsers);
 export default router;

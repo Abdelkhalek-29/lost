@@ -6,7 +6,12 @@ import randomstring from "randomstring";
 import jwt from "jsonwebtoken";
 import { sendEmail } from "../../utils/sendEmails.js";
 import { tokenModel } from "../../../DB/models/token.model.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // SignUp
 export const signup = asyncHandler(async (req, res, next) => {
   const { name, nId, email, password } = req.body;
@@ -32,9 +37,16 @@ export const signup = asyncHandler(async (req, res, next) => {
 
   const link = `${req.protocol}://${req.headers.host}/auth/confirmEmail/${activationCode}`;
 
-  const html = `
-      <button class="border rounded-pill  " ><a href="${link}">Activate Email</a></button>
-      `;
+  const templatePath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "..",
+    "email",
+    "Activation.html"
+  );
+  let html = fs.readFileSync(templatePath, "utf8");
+  html = html.replace("{{activationLink}}", link);
 
   const isSend = sendEmail({ to: email, subject: "Activate Account", html });
 
@@ -55,10 +67,9 @@ export const activateAccount = asyncHandler(async (req, res, next) => {
   if (!user) {
     return next(new Error("User not found !", { cause: 404 }));
   }
-  return res.json({
-    message:
-      "Congratulation, your account is now activated !, try to login Now",
-  });
+  return res.sendFile(
+    path.join(__dirname, "..", "..", "..", "email", "index.html")
+  );
 });
 
 // Login
@@ -92,8 +103,7 @@ export const login = asyncHandler(async (req, res, next) => {
   user.status = "online";
   await user.save();
 
-  
-  return res.json({ success: true, results: token, userRole:user.role});
+  return res.json({ success: true, results: token, userRole: user.role });
 });
 
 // Login Admin

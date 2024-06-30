@@ -176,3 +176,9 @@ export const options = asyncHandler(async (req, res, next) => {
     .select("name userName profileImage coverImage status -_id");
   return res.json({ success: true, user });
 });
+
+
+export const allUsers=asyncHandler(async(req,res,next)=>{
+  const users=await userModel.find({role:'user'}).select('_id name profileImage.url')
+  return res.json({success:true , result:users})
+})
